@@ -18,7 +18,11 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ default: Role.Student })
+  @Prop({
+    required: true, // Explicitly state it's required
+    enum: Object.values(Role), // Best practice for role fields
+    default: Role.Student, // Assign the default value
+  })
   role: string;
 }
 
