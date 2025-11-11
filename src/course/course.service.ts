@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -17,16 +17,36 @@ export class CourseService {
     });
   }
 
-  findAll() {
-    return `This action returns all course`;
+  async findAll(): Promise<Course[]> {
+    // .find() without arguments returns all documents. .exec() executes the query.
+    return this.courseModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} course`;
+  async findOne(id: string): Promise<Course> {
+    const course = await this.courseModel.findById(id).exec();
+
+    if (!course) {
+      throw new NotFoundException(`Course with ID "${id}" not found`);
+    }
+
+    return course;
   }
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
+  async update(id: string, updateCourseDto: UpdateCourseDto): Promise<Course> {
+    // Mongoose update logic using findByIdAndUpdate
+    const updatedCourse = await this.courseModel
+      .findByIdAndUpdate(
+        id, // Correctly receives and uses the string ID
+        updateCourseDto,
+        { new: true, runValidators: true },
+      )
+      .exec();
+
+    if (!updatedCourse) {
+      throw new NotFoundException(`Course with ID "${id}" not found`);
+    }
+
+    return updatedCourse;
   }
 
   remove(id: number) {
