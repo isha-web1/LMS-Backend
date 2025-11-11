@@ -49,7 +49,15 @@ export class CourseService {
     return updatedCourse;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  async remove(id: string): Promise<{ deleted: true; id: string }> {
+    // findByIdAndDelete returns the deleted document, or null if not found
+    const deletedCourse = await this.courseModel.findByIdAndDelete(id).exec();
+
+    if (!deletedCourse) {
+      throw new NotFoundException(`Course with ID "${id}" not found`);
+    }
+
+    // Return a confirmation object
+    return { deleted: true, id };
   }
 }

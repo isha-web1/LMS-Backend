@@ -44,7 +44,9 @@ export class CourseController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard, RolesGuard) // Apply RolesGuard specifically for this privileged action
+  @Roles(Role.Admin)
   remove(@Param('id') id: string) {
-    return this.courseService.remove(+id);
+    return this.courseService.remove(id);
   }
 }

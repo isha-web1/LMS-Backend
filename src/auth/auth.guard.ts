@@ -21,16 +21,15 @@ export class AuthGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token);
-      console.log('DEBUG: Token verified successfully. Payload:', payload);
+
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       request['user'] = payload;
     } catch (error) {
-      console.error(
-        'FATAL DEBUG: JWT Verification Failed with error:',
-        error.message,
-      );
+      // FIX: Corrected console.log syntax
+      console.log('JWT Verification Failed:', error.message);
+
       throw new UnauthorizedException('Invalid or expired token.');
     }
     return true;
