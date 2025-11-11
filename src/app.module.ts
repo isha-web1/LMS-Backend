@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config'; // <-- Import ConfigService
+import { CourseModule } from './course/course.module';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'; // <-- Import Conf
         uri: configService.get<string>('MONGODB_URL'),
       }),
       inject: [ConfigService], // Inject the service
-    }),
+    }), CourseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

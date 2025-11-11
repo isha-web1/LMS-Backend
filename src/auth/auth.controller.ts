@@ -11,6 +11,7 @@ import { RegisterUserDto } from './dto/registerUser.dto';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { AuthGuard } from './auth.guard';
 import { UserService } from 'src/user/user.service';
+import { first } from 'rxjs';
 
 //here create  /auth/register end point
 @Controller('auth')
@@ -39,7 +40,12 @@ export class AuthController {
     console.log('DEBUG: Request reached controller method.');
     const userId = req.user.sub;
     const user = await this.userService.getUserById(userId);
-    console.log(user);
-    return user;
+
+    return {
+      id: user?.id,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      email: user?.email,
+    };
   }
 }
