@@ -1,98 +1,114 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Project LMS (NestJS)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A  Learning Management System (LMS) built with NestJS, Mongoose and JWT-based authentication. Clean modular architecture with Users, Courses and Auth features.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Key Features
 
-## Project setup
+- ✅ JWT Authentication with login & register flows — see [`AuthService`](src/auth/auth.service.ts) and [`AuthController`](src/auth/auth.controller.ts)  
+- ✅ Route protection via guards:
+  - Access control with [`AuthGuard`](src/auth/auth.guard.ts) (validates JWTs)
+  - Role-based access via [`RolesGuard`](src/auth/roles.guard.ts) and [`Roles` decorator](src/auth/roles.decorator.ts)
+- ✅ User management (`UserModule`) with Mongoose schemas and unique email constraint — [`UserService`](src/user/user.service.ts), [`User` schema](src/user/schemas/user.schema.ts)
+- ✅ Course CRUD operations with validation DTOs — [`CourseController`](src/course/course.controller.ts), [`CourseService`](src/course/course.service.ts), [`CreateCourseDto`](src/course/dto/create-course.dto.ts)
+- ✅ Config-driven DB connection using [`ConfigModule`] and Mongoose async setup in [`AppModule`](src/app.module.ts)
+- ✅ Unit and e2e test setup (Jest + ts-jest) — see [`test/jest-e2e.json`](test/jest-e2e.json) and test scripts in [`package.json`](package.json)
 
-```bash
-$ npm install
+---
+
+## Tech Stack
+
+- NestJS (modular server framework) — [`AppModule`](src/app.module.ts)  
+- Mongoose (MongoDB ODM) — schemas in [`src/user/schemas/user.schema.ts`](src/user/schemas/user.schema.ts) and [`src/course/schemas/course.schema.ts`](src/course/schemas/course.schema.ts)  
+- JWT Authentication — [`@nestjs/jwt`](src/auth/auth.module.ts) with [`jwtConstants`](src/auth/constants.ts)  
+- Validation with `class-validator` & `ValidationPipe` — DTOs like [`RegisterUserDto`](src/auth/dto/registerUser.dto.ts) and [`LoginUserDto`](src/auth/dto/loginUser.dto.ts)  
+- Testing with Jest & Supertest (`test/app.e2e-spec.ts`) — config in [`package.json`](package.json) and [`test/jest-e2e.json`](test/jest-e2e.json)
+
+---
+
+## Getting Started (Quick Start)
+
+1. Install
+```sh
+npm install
 ```
 
-## Compile and run the project
+2. Create environment file
+- Copy `.env.local` (ignored by git) and set at least:
+  - `MONGODB_URL=mongodb://<user>:<pass>@host:port/db`
+  - `JWT_SECRET=your_secret_here`
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+3. Run in development
+```sh
+npm run start:dev
 ```
 
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+4. Run tests
+```sh
+npm run test       # unit tests
+npm run test:e2e   # e2e tests (uses test/jest-e2e.json)
 ```
 
-## Deployment
+Files to check:
+- App bootstrap: [`src/main.ts`](src/main.ts)  
+- API routes: [`src/app.controller.ts`](src/app.controller.ts), [`src/auth/auth.controller.ts`](src/auth/auth.controller.ts), [`src/course/course.controller.ts`](src/course/course.controller.ts)
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+---
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Architecture Overview
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+- src/
+  - auth/
+    - [`auth.module.ts`](src/auth/auth.module.ts) — wires up [`AuthService`](src/auth/auth.service.ts) and JWT
+    - [`auth.guard.ts`](src/auth/auth.guard.ts) — extracts/validates bearer token and attaches `user` payload to request
+    - [`roles.guard.ts`](src/auth/roles.guard.ts) & [`roles.decorator.ts`](src/auth/roles.decorator.ts) — role-based access
+    - DTOs: [`registerUser.dto.ts`](src/auth/dto/registerUser.dto.ts), [`loginUser.dto.ts`](src/auth/dto/loginUser.dto.ts)
+  - user/
+    - [`user.module.ts`](src/user/user.module.ts)
+    - [`user.service.ts`](src/user/user.service.ts)
+    - Schema: [`user.schema.ts`](src/user/schemas/user.schema.ts) (includes [`Role`](src/user/user.types.ts))
+  - course/
+    - [`course.module.ts`](src/course/course.module.ts)
+    - [`course.service.ts`](src/course/course.service.ts)
+    - [`course.controller.ts`](src/course/course.controller.ts)
+    - DTOs: [`create-course.dto.ts`](src/course/dto/create-course.dto.ts), [`update-course.dto.ts`](src/course/dto/update-course.dto.ts)
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## Authentication & Authorization
 
-Check out a few resources that may come in handy when working with NestJS:
+- Registration hashes passwords using bcrypt in [`AuthService`](src/auth/auth.service.ts).  
+- JWT token payload includes `sub` (user id), `email`, and `role`. Token signing is configured in [`src/auth/auth.module.ts`](src/auth/auth.module.ts) using `jwtConstants` from [`src/auth/constants.ts`](src/auth/constants.ts).  
+- Protect routes by applying guards:
+  - `@UseGuards(AuthGuard)` ensures a valid token is present — [`src/auth/auth.guard.ts`](src/auth/auth.guard.ts)
+  - `@Roles(Role.Admin)` + `RolesGuard` restricts actions to specific roles — see [`roles.decorator.ts`](src/auth/roles.decorator.ts) and [`roles.guard.ts`](src/auth/roles.guard.ts)
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## Validation & DTOs
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- Use DTOs with `class-validator` for request payload validation.
+  - Registration: [`RegisterUserDto`](src/auth/dto/registerUser.dto.ts)
+  - Login: [`LoginUserDto`](src/auth/dto/loginUser.dto.ts)
+  - Course: [`CreateCourseDto`](src/course/dto/create-course.dto.ts), [`UpdateCourseDto`](src/course/dto/update-course.dto.ts)
+- Global validation pipe is enabled in [`src/main.ts`](src/main.ts).
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Scripts
 
-## License
+See runnable scripts in [`package.json`](package.json):
+- npm run start, start:dev, start:prod
+- npm run test, test:e2e, test:cov
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## Testing
+
+- Unit tests live next to modules (e.g. [`src/course/course.service.spec.ts`](src/course/course.service.spec.ts)).  
+- e2e tests use [`test/app.e2e-spec.ts`](test/app.e2e-spec.ts) and `test/jest-e2e.json` config.
+
+---
+
